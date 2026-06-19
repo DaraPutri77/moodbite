@@ -1,14 +1,11 @@
-@extends('layouts.app', ['title' => 'MoodBite - Rekomendasi Makanan'])
+@extends('layouts.app', ['title' => 'MoodBite - Dashboard Admin'])
 
 @section('content')
 <section class="hero">
     <div>
-        <p class="badge">Mood-Based Food Recommendation</p>
-        <h1>Rekomendasi makanan sesuai suasana hati</h1>
-        <p>
-            MoodBite membantu pengguna mencatat dan mengelola rekomendasi makanan
-            berdasarkan mood, kategori, rasa, serta alasan rekomendasi.
-        </p>
+        <p class="badge">Dashboard Admin</p>
+        <h1>Kelola rekomendasi makanan MoodBite</h1>
+        <p>Halaman ini digunakan admin untuk menambah, melihat, mengubah, dan menghapus data rekomendasi makanan.</p>
     </div>
 
     <div class="hero-summary">
@@ -21,74 +18,53 @@
     <section class="section-header">
         <div>
             <h2>Daftar Rekomendasi Makanan</h2>
-            <p>Data berikut tersimpan di database dan dapat dikelola melalui fitur CRUD.</p>
+            <p>Data berikut tersimpan di database cloud dan dikelola melalui fitur CRUD.</p>
         </div>
 
-        <a href="{{ route('mood-foods.create') }}" class="btn btn-primary">
-            + Tambah Rekomendasi
-        </a>
+        <a href="{{ route('mood-foods.create') }}" class="btn btn-primary">+ Tambah Rekomendasi</a>
     </section>
 
     <section class="grid">
         @foreach ($moodFoods as $moodFood)
             <article class="card">
                 <div class="emoji">
-                    @php
-                        $mood = strtolower($moodFood->mood);
-                    @endphp
+                    @php $mood = strtolower($moodFood->mood); @endphp
 
                     @if ($mood === 'senang' || $mood === 'bahagia' || $mood === 'happy')
-                        😊
+                        ðŸ˜Š
                     @elseif ($mood === 'sedih' || $mood === 'galau')
-                        🥺
+                        ðŸ¥º
                     @elseif ($mood === 'capek' || $mood === 'lelah')
-                        😴
+                        ðŸ˜´
                     @elseif ($mood === 'marah' || $mood === 'kesal')
-                        😤
+                        ðŸ˜¤
                     @elseif ($mood === 'stress' || $mood === 'stres')
-                        😵‍💫
+                        ðŸ˜µâ€ðŸ’«
                     @else
-                        🍽️
+                        ðŸ½ï¸
                     @endif
                 </div>
 
                 <div class="card-body">
                     <div class="card-top">
                         <p class="badge">{{ $moodFood->mood }}</p>
-
                         @if ($moodFood->is_favorite)
-                            <span class="favorite">★ Favorit</span>
+                            <span class="favorite">â˜… Favorit</span>
                         @endif
                     </div>
 
                     <h2>{{ $moodFood->food_name }}</h2>
-
-                    <p class="meta">
-                        {{ $moodFood->category }}
-                        @if ($moodFood->taste)
-                            • {{ $moodFood->taste }}
-                        @endif
-                    </p>
-
-                    <p class="reason">
-                        {{ \Illuminate\Support\Str::limit($moodFood->reason, 100) }}
-                    </p>
+                    <p class="meta">{{ $moodFood->category }} @if($moodFood->taste) â€¢ {{ $moodFood->taste }} @endif</p>
+                    <p class="reason">{{ \Illuminate\Support\Str::limit($moodFood->reason, 100) }}</p>
 
                     <div class="actions">
-                        <a href="{{ route('mood-foods.show', $moodFood) }}" class="btn btn-light">
-                            Detail
-                        </a>
-
-                        <a href="{{ route('mood-foods.edit', $moodFood) }}" class="btn btn-warning">
-                            Edit
-                        </a>
+                        <a href="{{ route('mood-foods.show', $moodFood) }}" class="btn btn-light">Detail</a>
+                        <a href="{{ route('mood-foods.edit', $moodFood) }}" class="btn btn-warning">Edit</a>
 
                         <form action="{{ route('mood-foods.destroy', $moodFood) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus rekomendasi ini?')">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-danger">
-                                Hapus
-                            </button>
+                            <button type="submit" class="btn btn-danger">Hapus</button>
                         </form>
                     </div>
                 </div>
@@ -97,16 +73,10 @@
     </section>
 @else
     <section class="empty">
-        <div class="empty-icon">🍜</div>
+        <div class="empty-icon">ðŸœ</div>
         <h2>Belum ada rekomendasi makanan</h2>
-        <p>
-            Tambahkan rekomendasi pertama untuk mulai menggunakan MoodBite.
-            Data yang ditambahkan akan tersimpan di database dan dapat diedit atau dihapus.
-        </p>
-
-        <a href="{{ route('mood-foods.create') }}" class="btn btn-primary">
-            + Tambah Rekomendasi
-        </a>
+        <p>Tambahkan rekomendasi pertama agar MoodBite memiliki data yang dapat ditampilkan untuk pengguna.</p>
+        <a href="{{ route('mood-foods.create') }}" class="btn btn-primary">+ Tambah Rekomendasi</a>
     </section>
 @endif
 @endsection

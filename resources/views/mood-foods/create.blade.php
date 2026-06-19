@@ -1,13 +1,12 @@
-@extends('layouts.app', ['title' => 'Tambah Data - MoodBite'])
+@extends('layouts.app', ['title' => 'Tambah Rekomendasi - MoodBite'])
 
 @section('content')
 <section class="form-card">
-    <p class="badge">Create</p>
+    <p class="badge">Admin - Create</p>
     <h1>Tambah Rekomendasi Makanan</h1>
 
     <form action="{{ route('mood-foods.store') }}" method="POST">
         @csrf
-
         @include('mood-foods.partials.form', ['moodFood' => null])
 
         <div class="form-actions">

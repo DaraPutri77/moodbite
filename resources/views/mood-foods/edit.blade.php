@@ -1,14 +1,13 @@
-@extends('layouts.app', ['title' => 'Edit Data - MoodBite'])
+@extends('layouts.app', ['title' => 'Edit Rekomendasi - MoodBite'])
 
 @section('content')
 <section class="form-card">
-    <p class="badge">Update</p>
+    <p class="badge">Admin - Update</p>
     <h1>Edit Rekomendasi Makanan</h1>
 
     <form action="{{ route('mood-foods.update', $moodFood) }}" method="POST">
         @csrf
         @method('PUT')
-
         @include('mood-foods.partials.form', ['moodFood' => $moodFood])
 
         <div class="form-actions">

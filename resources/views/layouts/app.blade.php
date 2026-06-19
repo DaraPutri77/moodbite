@@ -13,32 +13,23 @@
 
     <nav class="navbar">
         <a href="{{ route('home') }}" class="brand">
-            <span class="brand-icon">🍽️</span>
+            <span class="brand-icon">ðŸ½ï¸</span>
             <span>MoodBite</span>
         </a>
 
         <div class="nav-actions">
-            <a href="{{ route('home') }}" class="nav-link">
-                Dashboard Pengguna
-            </a>
-
-            <a href="{{ route('mood-foods.index') }}" class="nav-link">
-                Dashboard Admin
-            </a>
+            <a href="{{ route('home') }}" class="nav-link">Dashboard Pengguna</a>
+            <a href="{{ route('mood-foods.index') }}" class="nav-link">Dashboard Admin</a>
 
             @if ($isAdminPage && !request()->routeIs('mood-foods.create'))
-                <a href="{{ route('mood-foods.create') }}" class="btn btn-primary">
-                    + Tambah Rekomendasi
-                </a>
+                <a href="{{ route('mood-foods.create') }}" class="btn btn-primary">+ Tambah Rekomendasi</a>
             @endif
         </div>
     </nav>
 
     <main class="container">
         @if (session('success'))
-            <div class="alert">
-                {{ session('success') }}
-            </div>
+            <div class="alert">{{ session('success') }}</div>
         @endif
 
         @yield('content')

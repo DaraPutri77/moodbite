@@ -1,4 +1,4 @@
-@extends('layouts.app', ['title' => 'Detail Data - MoodBite'])
+@extends('layouts.app', ['title' => 'Detail Rekomendasi - MoodBite'])
 
 @section('content')
 <section class="detail-card">
@@ -8,12 +8,12 @@
     <p class="meta">
         {{ $moodFood->category }}
         @if ($moodFood->taste)
-            • {{ $moodFood->taste }}
+            â€¢ {{ $moodFood->taste }}
         @endif
     </p>
 
     @if ($moodFood->is_favorite)
-        <p class="favorite">★ Favorit</p>
+        <p class="favorite">â˜… Favorit</p>
     @endif
 
     <h3>Alasan Rekomendasi</h3>
@@ -23,7 +23,7 @@
         <a href="{{ route('mood-foods.index') }}" class="btn btn-light">Kembali</a>
         <a href="{{ route('mood-foods.edit', $moodFood) }}" class="btn btn-warning">Edit</a>
 
-        <form action="{{ route('mood-foods.destroy', $moodFood) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus data ini?')">
+        <form action="{{ route('mood-foods.destroy', $moodFood) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus rekomendasi ini?')">
             @csrf
             @method('DELETE')
             <button type="submit" class="btn btn-danger">Hapus</button>
