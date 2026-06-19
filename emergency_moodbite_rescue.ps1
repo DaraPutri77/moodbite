@@ -1,4 +1,14 @@
-﻿<?php
+$ErrorActionPreference = 'Stop'
+
+$root = (Get-Location).Path
+$apiDir = Join-Path $root 'api'
+if (!(Test-Path $apiDir)) { New-Item -ItemType Directory -Path $apiDir | Out-Null }
+
+$apiPath = Join-Path $apiDir 'index.php'
+$vercelPath = Join-Path $root 'vercel.json'
+
+$php = @'
+<?php
 
 error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE & ~E_WARNING);
 ini_set('display_errors', '0');
@@ -82,27 +92,27 @@ function find_food($id) {
 
 function mood_icon($mood) {
     $m = strtolower((string) $mood);
-    if (in_array($m, ['senang', 'bahagia', 'happy'])) return 'ðŸ˜Š';
-    if (in_array($m, ['sedih', 'galau'])) return 'ðŸ¥º';
-    if (in_array($m, ['capek', 'lelah'])) return 'ðŸ˜´';
-    if (in_array($m, ['marah', 'kesal'])) return 'ðŸ˜¤';
-    if (in_array($m, ['stress', 'stres'])) return 'ðŸ˜µâ€ðŸ’«';
-    if (in_array($m, ['santai'])) return 'ðŸ˜Œ';
-    return 'ðŸ½ï¸';
+    if (in_array($m, ['senang', 'bahagia', 'happy'])) return '😊';
+    if (in_array($m, ['sedih', 'galau'])) return '🥺';
+    if (in_array($m, ['capek', 'lelah'])) return '😴';
+    if (in_array($m, ['marah', 'kesal'])) return '😤';
+    if (in_array($m, ['stress', 'stres'])) return '😵‍💫';
+    if (in_array($m, ['santai'])) return '😌';
+    return '🍽️';
 }
 
 function page($title, $content, $isAdmin = false) {
     $add = $isAdmin ? '<a href="/admin/rekomendasi/create" class="btn primary">+ Tambah Rekomendasi</a>' : '';
     echo '<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>' . h($title) . '</title><style>
         *{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#fff7ed;color:#2f1b12}.navbar{background:#7c2d12;color:white;padding:18px 8%;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}.brand{color:white;text-decoration:none;font-size:26px;font-weight:900}.nav{display:flex;gap:14px;align-items:center;flex-wrap:wrap}.nav a{color:#ffedd5;text-decoration:none;font-weight:800}.container{width:min(1120px,92%);margin:34px auto}.hero,.panel{background:white;border-radius:22px;padding:34px;box-shadow:0 14px 35px rgba(124,45,18,.12);margin-bottom:26px}.hero{display:flex;justify-content:space-between;gap:28px;align-items:center}.badge{display:inline-block;background:#ffedd5;color:#9a3412;padding:7px 13px;border-radius:999px;font-weight:900;font-size:13px}h1{font-size:38px;line-height:1.2;margin:12px 0}p{line-height:1.6}.summary{min-width:170px;background:#ffedd5;color:#7c2d12;border-radius:18px;padding:22px;text-align:center}.summary strong{display:block;font-size:42px}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px}.card{background:white;border-radius:20px;overflow:hidden;box-shadow:0 12px 28px rgba(124,45,18,.10)}.emoji{height:135px;display:grid;place-items:center;font-size:58px;background:linear-gradient(135deg,#ffedd5,#fed7aa)}.card-body{padding:20px}.top{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:10px}.meta{color:#7c2d12;font-weight:800}.favorite{color:#ca8a04;font-weight:900}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}.btn,button{border:0;border-radius:12px;padding:11px 16px;text-decoration:none;cursor:pointer;display:inline-block;font-weight:900;font-size:14px;background:#ffedd5;color:#7c2d12}.primary{background:#ea580c;color:white!important}.warning{background:#facc15;color:#422006}.danger{background:#dc2626;color:white}input,textarea{width:100%;padding:12px 14px;border:1px solid #fed7aa;border-radius:12px;margin:8px 0 14px;font-size:15px}label{font-weight:900}.alert{background:#dcfce7;color:#166534;padding:14px 18px;border-radius:14px;margin-bottom:20px;font-weight:800}.errorbox{background:#fee2e2;color:#7f1d1d;border-radius:16px;padding:20px}.small{font-size:13px;color:#7c2d12}@media(max-width:700px){.hero{flex-direction:column;align-items:stretch}h1{font-size:30px}}
-    </style></head><body><nav class="navbar"><a class="brand" href="/">ðŸ½ï¸ MoodBite</a><div class="nav"><a href="/">Dashboard Pengguna</a><a href="/admin/rekomendasi">Dashboard Admin</a>' . $add . '</div></nav><main class="container">' . $content . '</main></body></html>';
+    </style></head><body><nav class="navbar"><a class="brand" href="/">🍽️ MoodBite</a><div class="nav"><a href="/">Dashboard Pengguna</a><a href="/admin/rekomendasi">Dashboard Admin</a>' . $add . '</div></nav><main class="container">' . $content . '</main></body></html>';
 }
 
 function card($food, $admin = false) {
     $id = (int) $food['id'];
     $reason = $admin ? mb_strimwidth((string) $food['reason'], 0, 130, '...') : $food['reason'];
     $actions = $admin ? '<div class="actions"><a class="btn" href="/admin/rekomendasi/' . $id . '">Detail</a><a class="btn warning" href="/admin/rekomendasi/' . $id . '/edit">Edit</a><form method="post" action="/admin/rekomendasi/' . $id . '" onsubmit="return confirm(\'Yakin ingin menghapus rekomendasi ini?\')"><input type="hidden" name="_method" value="DELETE"><button class="danger" type="submit">Hapus</button></form></div>' : '';
-    return '<article class="card"><div class="emoji">' . mood_icon($food['mood']) . '</div><div class="card-body"><div class="top"><span class="badge">' . h($food['mood']) . '</span>' . (!empty($food['is_favorite']) ? '<span class="favorite">â˜… Favorit</span>' : '') . '</div><h2>' . h($food['food_name']) . '</h2><p class="meta">' . h($food['category']) . (!empty($food['taste']) ? ' â€¢ ' . h($food['taste']) : '') . '</p><p>' . h($reason) . '</p>' . $actions . '</div></article>';
+    return '<article class="card"><div class="emoji">' . mood_icon($food['mood']) . '</div><div class="card-body"><div class="top"><span class="badge">' . h($food['mood']) . '</span>' . (!empty($food['is_favorite']) ? '<span class="favorite">★ Favorit</span>' : '') . '</div><h2>' . h($food['food_name']) . '</h2><p class="meta">' . h($food['category']) . (!empty($food['taste']) ? ' • ' . h($food['taste']) : '') . '</p><p>' . h($reason) . '</p>' . $actions . '</div></article>';
 }
 
 function form_html($action, $food = null) {
@@ -189,7 +199,7 @@ try {
             redirect_to('/admin/rekomendasi');
         }
         $food = find_food($id);
-        $html = '<section class="panel"><p class="badge">' . h($food['mood']) . '</p><h1>' . h($food['food_name']) . '</h1><p class="meta">' . h($food['category']) . (!empty($food['taste']) ? ' â€¢ ' . h($food['taste']) : '') . '</p><h3>Alasan Rekomendasi</h3><p>' . h($food['reason']) . '</p><div class="actions"><a class="btn" href="/admin/rekomendasi">Kembali</a><a class="btn warning" href="/admin/rekomendasi/' . $id . '/edit">Edit</a></div></section>';
+        $html = '<section class="panel"><p class="badge">' . h($food['mood']) . '</p><h1>' . h($food['food_name']) . '</h1><p class="meta">' . h($food['category']) . (!empty($food['taste']) ? ' • ' . h($food['taste']) : '') . '</p><h3>Alasan Rekomendasi</h3><p>' . h($food['reason']) . '</p><div class="actions"><a class="btn" href="/admin/rekomendasi">Kembali</a><a class="btn warning" href="/admin/rekomendasi/' . $id . '/edit">Edit</a></div></section>';
         page('Detail Rekomendasi - MoodBite', $html, true);
         exit;
     }
@@ -201,3 +211,29 @@ try {
     $message = h($e->getMessage());
     page('MoodBite - Error', '<section class="panel errorbox"><h1>Database / Server Error</h1><p>' . $message . '</p><p class="small">Cek Environment Variables Vercel: DB_CONNECTION=pgsql, DB_HOST, DB_PORT=5432, DB_DATABASE=neondb, DB_USERNAME, DB_PASSWORD, DB_SSLMODE=require.</p></section>');
 }
+'@
+
+$vercel = @'
+{
+  "version": 2,
+  "functions": {
+    "api/index.php": {
+      "runtime": "vercel-php@0.9.0"
+    }
+  },
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/api/index.php"
+    }
+  ]
+}
+'@
+
+Set-Content -Path $apiPath -Value $php -Encoding UTF8
+Set-Content -Path $vercelPath -Value $vercel -Encoding UTF8
+
+Write-Host "OK: api/index.php rescue ditulis" -ForegroundColor Green
+Write-Host "OK: vercel.json rescue ditulis" -ForegroundColor Green
+Write-Host "Cek awal api/index.php:" -ForegroundColor Cyan
+Get-Content $apiPath -TotalCount 3
