@@ -10,14 +10,12 @@ class MoodFoodController extends Controller
     public function home()
     {
         $moodFoods = MoodFood::latest()->get();
-
         return view('home', compact('moodFoods'));
     }
 
     public function index()
     {
         $moodFoods = MoodFood::latest()->get();
-
         return view('mood-foods.index', compact('moodFoods'));
     }
 
@@ -38,11 +36,9 @@ class MoodFoodController extends Controller
         ]);
 
         $validated['is_favorite'] = $request->has('is_favorite');
-
         MoodFood::create($validated);
 
-        return redirect()
-            ->route('mood-foods.index')
+        return redirect()->route('mood-foods.index')
             ->with('success', 'Rekomendasi makanan berhasil ditambahkan.');
     }
 
@@ -68,11 +64,9 @@ class MoodFoodController extends Controller
         ]);
 
         $validated['is_favorite'] = $request->has('is_favorite');
-
         $moodFood->update($validated);
 
-        return redirect()
-            ->route('mood-foods.index')
+        return redirect()->route('mood-foods.index')
             ->with('success', 'Rekomendasi makanan berhasil diperbarui.');
     }
 
@@ -80,8 +74,7 @@ class MoodFoodController extends Controller
     {
         $moodFood->delete();
 
-        return redirect()
-            ->route('mood-foods.index')
+        return redirect()->route('mood-foods.index')
             ->with('success', 'Rekomendasi makanan berhasil dihapus.');
     }
 }

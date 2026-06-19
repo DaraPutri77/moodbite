@@ -5,9 +5,8 @@
     <div>
         <p class="badge">Dashboard Admin</p>
         <h1>Kelola rekomendasi makanan MoodBite</h1>
-        <p>Halaman ini digunakan admin untuk menambah, melihat, mengubah, dan menghapus data rekomendasi makanan.</p>
+        <p>Admin dapat menambahkan, melihat detail, mengedit, dan menghapus rekomendasi makanan yang akan tampil pada dashboard pengguna.</p>
     </div>
-
     <div class="hero-summary">
         <strong>{{ $moodFoods->count() }}</strong>
         <span>Total Rekomendasi</span>
@@ -18,9 +17,8 @@
     <section class="section-header">
         <div>
             <h2>Daftar Rekomendasi Makanan</h2>
-            <p>Data berikut tersimpan di database cloud dan dikelola melalui fitur CRUD.</p>
+            <p>Data berikut tersimpan di database cloud dan dapat dikelola melalui fitur CRUD.</p>
         </div>
-
         <a href="{{ route('mood-foods.create') }}" class="btn btn-primary">+ Tambah Rekomendasi</a>
     </section>
 
@@ -29,22 +27,14 @@
             <article class="card">
                 <div class="emoji">
                     @php $mood = strtolower($moodFood->mood); @endphp
-
-                    @if ($mood === 'senang' || $mood === 'bahagia' || $mood === 'happy')
-                        ðŸ˜Š
-                    @elseif ($mood === 'sedih' || $mood === 'galau')
-                        ðŸ¥º
-                    @elseif ($mood === 'capek' || $mood === 'lelah')
-                        ðŸ˜´
-                    @elseif ($mood === 'marah' || $mood === 'kesal')
-                        ðŸ˜¤
-                    @elseif ($mood === 'stress' || $mood === 'stres')
-                        ðŸ˜µâ€ðŸ’«
-                    @else
-                        ðŸ½ï¸
+                    @if ($mood === 'senang' || $mood === 'bahagia' || $mood === 'happy') ðŸ˜Š
+                    @elseif ($mood === 'sedih' || $mood === 'galau') ðŸ¥º
+                    @elseif ($mood === 'capek' || $mood === 'lelah') ðŸ˜´
+                    @elseif ($mood === 'marah' || $mood === 'kesal') ðŸ˜¤
+                    @elseif ($mood === 'stress' || $mood === 'stres') ðŸ˜µâ€ðŸ’«
+                    @else ðŸ½ï¸
                     @endif
                 </div>
-
                 <div class="card-body">
                     <div class="card-top">
                         <p class="badge">{{ $moodFood->mood }}</p>
@@ -52,15 +42,12 @@
                             <span class="favorite">â˜… Favorit</span>
                         @endif
                     </div>
-
                     <h2>{{ $moodFood->food_name }}</h2>
                     <p class="meta">{{ $moodFood->category }} @if($moodFood->taste) â€¢ {{ $moodFood->taste }} @endif</p>
                     <p class="reason">{{ \Illuminate\Support\Str::limit($moodFood->reason, 100) }}</p>
-
                     <div class="actions">
                         <a href="{{ route('mood-foods.show', $moodFood) }}" class="btn btn-light">Detail</a>
                         <a href="{{ route('mood-foods.edit', $moodFood) }}" class="btn btn-warning">Edit</a>
-
                         <form action="{{ route('mood-foods.destroy', $moodFood) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus rekomendasi ini?')">
                             @csrf
                             @method('DELETE')
@@ -75,7 +62,7 @@
     <section class="empty">
         <div class="empty-icon">ðŸœ</div>
         <h2>Belum ada rekomendasi makanan</h2>
-        <p>Tambahkan rekomendasi pertama agar MoodBite memiliki data yang dapat ditampilkan untuk pengguna.</p>
+        <p>Tambahkan rekomendasi pertama agar dashboard pengguna memiliki data yang dapat ditampilkan.</p>
         <a href="{{ route('mood-foods.create') }}" class="btn btn-primary">+ Tambah Rekomendasi</a>
     </section>
 @endif
