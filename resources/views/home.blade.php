@@ -5,8 +5,13 @@
     <div>
         <p class="badge">Dashboard Pengguna</p>
         <h1>Temukan makanan yang cocok dengan suasana hatimu</h1>
-        <p>MoodBite menampilkan rekomendasi makanan berdasarkan mood, kategori, rasa, dan alasan rekomendasi. Pengguna hanya dapat melihat daftar rekomendasi, sedangkan data dikelola oleh admin.</p>
+        <p>
+            MoodBite menampilkan rekomendasi makanan berdasarkan mood, kategori,
+            rasa, dan alasan rekomendasi. Pengguna hanya melihat daftar rekomendasi,
+            sedangkan data dikelola oleh admin.
+        </p>
     </div>
+
     <div class="hero-summary">
         <strong>{{ $moodFoods->count() }}</strong>
         <span>Total Rekomendasi</span>
@@ -34,6 +39,7 @@
                     @else ðŸ½ï¸
                     @endif
                 </div>
+
                 <div class="card-body">
                     <div class="card-top">
                         <p class="badge">{{ $moodFood->mood }}</p>
@@ -52,7 +58,7 @@
     <section class="empty">
         <div class="empty-icon">ðŸœ</div>
         <h2>Belum ada rekomendasi makanan</h2>
-        <p>Rekomendasi belum tersedia. Admin dapat menambahkan data melalui dashboard admin.</p>
+        <p>Rekomendasi makanan belum tersedia. Admin dapat menambahkan data melalui dashboard admin.</p>
     </section>
 @endif
 @endsection

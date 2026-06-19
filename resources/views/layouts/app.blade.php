@@ -20,6 +20,7 @@
         <div class="nav-actions">
             <a href="{{ route('home') }}" class="nav-link">Dashboard Pengguna</a>
             <a href="{{ route('mood-foods.index') }}" class="nav-link">Dashboard Admin</a>
+
             @if ($isAdminPage && !request()->routeIs('mood-foods.create'))
                 <a href="{{ route('mood-foods.create') }}" class="btn btn-primary">+ Tambah Rekomendasi</a>
             @endif
@@ -30,6 +31,7 @@
         @if (session('success'))
             <div class="alert">{{ session('success') }}</div>
         @endif
+
         @yield('content')
     </main>
 </body>

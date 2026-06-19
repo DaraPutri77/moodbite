@@ -4,12 +4,16 @@
 <section class="detail-card">
     <p class="badge">{{ $moodFood->mood }}</p>
     <h1>{{ $moodFood->food_name }}</h1>
+
     <p class="meta">{{ $moodFood->category }} @if ($moodFood->taste) â€¢ {{ $moodFood->taste }} @endif</p>
+
     @if ($moodFood->is_favorite)
         <p class="favorite">â˜… Favorit</p>
     @endif
+
     <h3>Alasan Rekomendasi</h3>
     <p>{{ $moodFood->reason }}</p>
+
     <div class="actions">
         <a href="{{ route('mood-foods.index') }}" class="btn btn-light">Kembali</a>
         <a href="{{ route('mood-foods.edit', $moodFood) }}" class="btn btn-warning">Edit</a>
