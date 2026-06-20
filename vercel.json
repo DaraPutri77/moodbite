@@ -2,8 +2,6 @@
   "version": 2,
   "routes": [
     { "src": "/admin/rekomendasi", "dest": "/admin.html" },
-    { "src": "/admin/?", "dest": "/admin.html" },
-    { "src": "/mood-foods/?", "dest": "/admin.html" },
     { "src": "/(.*)", "dest": "/index.html" }
   ]
 }

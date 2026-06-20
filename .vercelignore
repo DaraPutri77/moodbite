@@ -17,5 +17,3 @@ routes
 storage
 tests
 *.ps1
-/public/index.php
-/public/.htaccess
