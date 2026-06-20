@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MoodBite - Dashboard Admin</title>
+  <style>
+    *{box-sizing:border-box} body{margin:0;font-family:Arial,sans-serif;background:#fff7ed;color:#2b140c;line-height:1.55}.nav{background:#7c250c;color:white;padding:22px 8%;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}.brand{font-size:28px;font-weight:800}.nav a{color:white;text-decoration:none;font-weight:700;margin-left:18px}.container{padding:36px 8%}.panel,.card{background:white;border-radius:24px;padding:28px;margin-bottom:24px;box-shadow:0 20px 50px #00000012}input,textarea{width:100%;padding:14px;border:1px solid #fed7aa;border-radius:12px;margin:8px 0 16px;font-size:16px}label{font-weight:800}.btn{background:#f97316;color:white;padding:12px 18px;border-radius:12px;border:0;font-weight:800;cursor:pointer;text-decoration:none;margin:4px}.danger{background:#dc2626}.edit{background:#facc15;color:#2b140c}.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}.badge{background:#ffedd5;color:#8a2f12;padding:8px 14px;border-radius:999px;display:inline-block;font-weight:800}.error{background:#fee2e2;color:#991b1b;border-radius:16px;padding:18px;white-space:pre-wrap} @media(max-width:760px){.nav a{display:inline-block;margin:8px 8px 0 0}}
+  </style>
+</head>
+<body>
+  <nav class="nav"><div class="brand">ðŸ½ï¸ MoodBite Admin</div><div><a href="/">Dashboard Pengguna</a><a href="/admin/rekomendasi">Dashboard Admin</a></div></nav>
+  <main class="container">
+    <section class="panel"><h1>Dashboard Admin Rekomendasi</h1><p>Admin dapat menambah, melihat, mengubah, dan menghapus data rekomendasi makanan. Data tersimpan di database cloud Supabase.</p><input type="hidden" id="id"><label>Mood</label><input id="mood" placeholder="Contoh: Bahagia, Sedih, Capek"><label>Nama Makanan</label><input id="food_name" placeholder="Contoh: Sup Ayam Hangat"><label>Kategori</label><input id="category" placeholder="Contoh: Comfort Food"><label>Rasa / Sensasi</label><input id="taste" placeholder="Contoh: Gurih dan hangat"><label>Alasan Rekomendasi</label><textarea id="reason" rows="4" placeholder="Jelaskan alasan rekomendasi"></textarea><label><input type="checkbox" id="is_favorite" style="width:auto"> Jadikan favorit</label><br><br><button class="btn" onclick="saveData()">Simpan Rekomendasi</button><button class="btn danger" onclick="resetForm()">Reset</button></section>
+    <section><h2>Data Rekomendasi</h2><div id="list" class="row"></div></section>
+  </main>
+<script>
+const SUPABASE_URL = "https://foivzaaqybjkteiqhpet.supabase.co";
+const SUPABASE_KEY = "sb_publishable_esdVli0x3S6pk_dBz7P8HA_EggkaxTa";
+function esc(v){return String(v ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
+async function request(path,options={}){options.headers={apikey:SUPABASE_KEY,Authorization:"Bearer "+SUPABASE_KEY,"Content-Type":"application/json",Prefer:"return=representation",...(options.headers||{})};return fetch(SUPABASE_URL+path,options)}
+async function loadData(){const list=document.getElementById('list');try{const res=await request("/rest/v1/mood_foods?select=*&order=created_at.desc");const data=await res.json();if(!res.ok) throw new Error(JSON.stringify(data,null,2));if(!Array.isArray(data)||data.length===0){list.innerHTML='<div class="card"><h2>Belum ada data</h2><p>Tambahkan rekomendasi pertama melalui form admin.</p></div>';return;}list.innerHTML=data.map(item=>`<div class="card"><p><span class="badge">${esc(item.mood)}</span> ${item.is_favorite?'â˜… Favorit':''}</p><h2>${esc(item.food_name)}</h2><p><b>${esc(item.category)}</b> â€¢ ${esc(item.taste||'-')}</p><p>${esc(item.reason)}</p><button class="btn edit" onclick='editData(${JSON.stringify(item).replace(/'/g,"&#39;")})'>Edit</button><button class="btn danger" onclick="deleteData(${item.id})">Hapus</button></div>`).join('');}catch(e){list.innerHTML='<div class="error"><b>Error database:</b> '+esc(e.message)+'</div>';}}
+function resetForm(){id.value='';mood.value='';food_name.value='';category.value='';taste.value='';reason.value='';is_favorite.checked=false;}
+function editData(item){id.value=item.id;mood.value=item.mood;food_name.value=item.food_name;category.value=item.category;taste.value=item.taste||'';reason.value=item.reason;is_favorite.checked=!!item.is_favorite;window.scrollTo({top:0,behavior:'smooth'});}
+async function saveData(){const payload={mood:mood.value.trim(),food_name:food_name.value.trim(),category:category.value.trim(),taste:taste.value.trim(),reason:reason.value.trim(),is_favorite:is_favorite.checked,updated_at:new Date().toISOString()};if(!payload.mood||!payload.food_name||!payload.category||!payload.reason){alert('Mood, nama makanan, kategori, dan alasan wajib diisi.');return;}try{let res;if(id.value){res=await request("/rest/v1/mood_foods?id=eq."+id.value,{method:"PATCH",body:JSON.stringify(payload)});}else{payload.created_at=new Date().toISOString();res=await request("/rest/v1/mood_foods",{method:"POST",body:JSON.stringify(payload)});}if(!res.ok){const err=await res.json();throw new Error(JSON.stringify(err,null,2));}resetForm();loadData();}catch(e){alert('Gagal simpan: '+e.message);}}
+async function deleteData(rowId){if(confirm('Hapus data ini?')){try{const res=await request("/rest/v1/mood_foods?id=eq."+rowId,{method:"DELETE"});if(!res.ok){const err=await res.json();throw new Error(JSON.stringify(err,null,2));}loadData();}catch(e){alert('Gagal hapus: '+e.message);}}}
+loadData();
+</script>
+</body>
+</html>
