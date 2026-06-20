@@ -1,7 +1,0 @@
-﻿{
-  "version": 2,
-  "routes": [
-    { "src": "/admin/rekomendasi", "dest": "/admin.html" },
-    { "src": "/(.*)", "dest": "/index.html" }
-  ]
-}
